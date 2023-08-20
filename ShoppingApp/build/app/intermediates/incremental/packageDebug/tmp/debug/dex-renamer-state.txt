@@ -1,0 +1,4 @@
+#Sun Aug 20 11:24:37 IST 2023
+base.0=/home/sakun/Apps/testingapp/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
+path.0=classes.dex
+renamed.0=classes.dex
