@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:testingapp/Models/product_model.dart';
 import 'package:testingapp/Pages/details_page.dart';
 import 'package:testingapp/Cards/item_card.dart';
 import 'package:testingapp/Models/product_provider.dart';
@@ -43,25 +44,51 @@ class _HomePageState extends State<HomePage> {
           Icons.home,
           color: AppColor.getColors[1],
         ),
-        title: TextField(
-          focusNode: _focusNode,
-          onChanged: (text) {
-            setState(() {
-              isSearch = true;
-              searchText = text.toLowerCase();
-              if (searchText == '') {
-                setState(() {
-                  isSearch = false;
-                });
-              }
-            });
-          },
-          cursorColor: AppColor.getColors[1],
-          decoration: InputDecoration(
-            label: Text(
-              'Search Products',
-              style: TextStyle(
+        title: Container(
+          height: 42,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border(
+              bottom: BorderSide(
                 color: AppColor.getColors[1],
+              ),
+              right: BorderSide(
+                color: AppColor.getColors[1],
+              ),
+              left: BorderSide(
+                color: AppColor.getColors[1],
+              ),
+              top: BorderSide(
+                color: AppColor.getColors[1],
+              ),
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(
+              bottom: 5,
+            ),
+            child: TextField(
+              focusNode: _focusNode,
+              onChanged: (text) {
+                setState(() {
+                  isSearch = true;
+                  searchText = text.toLowerCase();
+                  if (searchText == '') {
+                    setState(() {
+                      isSearch = false;
+                    });
+                  }
+                });
+              },
+              //cursorColor: AppColor.getColors[1],
+              decoration: InputDecoration(
+                hintText: 'Search Products',
+                contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                hintStyle: TextStyle(
+                  color: AppColor.getColors[1],
+                ),
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
               ),
             ),
           ),
@@ -99,16 +126,23 @@ class _HomePageState extends State<HomePage> {
           future: productProvider.productList,
           builder: ((context, snapshot) {
             if (snapshot.hasData) {
-              final fProducts = snapshot.data!
+              final eProducts = snapshot.data!
                   .where(
                       (product) => !CartProvider.getCartList.contains(product))
                   .toList();
-              final List<String> categoryNames = [];
+              List<Product> fProducts = isSearch == true
+                  ? eProducts
+                      .where((element) =>
+                          element.title.toLowerCase().startsWith(searchText))
+                      .toList()
+                  : eProducts;
+              List<String> categoryNames = [];
               for (int i = 0; i < fProducts.length; i++) {
                 if (!categoryNames.contains(fProducts[i].category.name)) {
                   categoryNames.add(fProducts[i].category.name);
                 }
               }
+
               log(categoryNames.toString());
 
               return Expanded(
@@ -141,56 +175,24 @@ class _HomePageState extends State<HomePage> {
                                   scrollDirection: Axis.horizontal,
                                   itemCount: cProducts.length,
                                   itemBuilder: (context, index) {
-                                    return isSearch == false
-                                        ?
-                                        // filter and remove the items already present in cart
-
-                                        Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 5),
-                                            child: InkWell(
-                                              onTap: () {
-                                                Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                        builder: (BuildContext
-                                                                context) =>
-                                                            DetailsPage(
-                                                                product:
-                                                                    cProducts[
-                                                                        index])));
-                                              },
-                                              child: ItemCard(
-                                                  product: cProducts[index]),
-                                            ),
-                                          )
-                                        :
-
-                                        // search implementation
-                                        cProducts[index]
-                                                .title
-                                                .toLowerCase()
-                                                .startsWith(searchText)
-                                            ? Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 5),
-                                                child: InkWell(
-                                                  onTap: () {
-                                                    Navigator.of(context).push(
-                                                        MaterialPageRoute(
-                                                            builder: (BuildContext
-                                                                    context) =>
-                                                                DetailsPage(
-                                                                    product:
-                                                                        cProducts[
-                                                                            index])));
-                                                  },
-                                                  child: ItemCard(
-                                                    product: cProducts[index],
-                                                  ),
-                                                ),
-                                              )
-                                            : Row();
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          DetailsPage(
+                                                              product:
+                                                                  cProducts[
+                                                                      index])));
+                                        },
+                                        child:
+                                            ItemCard(product: cProducts[index]),
+                                      ),
+                                    );
                                   }),
                             ),
                           ],
