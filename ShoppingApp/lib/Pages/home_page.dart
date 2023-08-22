@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, non_constant_identifier_names
 
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:testingapp/Models/product_model.dart';
@@ -9,7 +8,6 @@ import 'package:testingapp/Pages/details_page.dart';
 import 'package:testingapp/Cards/item_card.dart';
 import 'package:testingapp/Models/product_provider.dart';
 import 'package:testingapp/Models/theme_provider.dart';
-
 import '../Models/cart.dart';
 
 class HomePage extends StatefulWidget {
