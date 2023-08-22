@@ -3,7 +3,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:testingapp/product_model.dart';
+import 'package:testingapp/Models/product_model.dart';
 
 class APIs {
   static Future<List<Product>?> getProducts() async {

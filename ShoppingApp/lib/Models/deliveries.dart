@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_final_fields
 
 import 'package:flutter/foundation.dart';
-import 'package:testingapp/product_model.dart';
+import 'package:testingapp/Models/product_model.dart';
 
 class Deliveries extends ChangeNotifier {
   List<Product> _deliveries = [];

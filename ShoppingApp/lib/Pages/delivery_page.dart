@@ -2,7 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:testingapp/deliveries.dart';
+import 'package:testingapp/Models/deliveries.dart';
+import 'package:testingapp/Models/theme_provider.dart';
 
 class DeliveryPage extends StatefulWidget {
   const DeliveryPage({super.key});
@@ -15,14 +16,12 @@ class _DeliveryPageState extends State<DeliveryPage> {
   @override
   Widget build(BuildContext context) {
     Deliveries DeliveriesProvider = Provider.of<Deliveries>(context);
+    AppColors AppColor = Provider.of<AppColors>(context);
     bool noDeliveries = DeliveriesProvider.getDeliveries.isEmpty;
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'My deliveries',
-          style: TextStyle(
-            color: Colors.white,
-          ),
         ),
         centerTitle: true,
       ),
@@ -54,7 +53,8 @@ class _DeliveryPageState extends State<DeliveryPage> {
                                 child: Container(
                                   height: 155,
                                   decoration: BoxDecoration(
-                                    color: Colors.black12,
+                                    color:
+                                        AppColor.getColors[1].withOpacity(.1),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Column(
@@ -70,8 +70,8 @@ class _DeliveryPageState extends State<DeliveryPage> {
                                           ),
                                         ),
                                         title: Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 8),
+                                          padding: const EdgeInsets.only(
+                                              top: 8, bottom: 5),
                                           child: Text(
                                             DeliveriesProvider
                                                 .getDeliveries[index].title,
@@ -185,7 +185,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
                     text: TextSpan(
                       style: TextStyle(
                         fontSize: 20,
-                        color: Colors.black54,
+                        color: AppColor.getColors[1],
                       ),
                       children: <TextSpan>[
                         TextSpan(text: 'No items on route to delivery\n'),

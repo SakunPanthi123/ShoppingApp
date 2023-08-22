@@ -2,35 +2,33 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:testingapp/buy_page_single.dart';
-import 'package:testingapp/deliveries.dart';
+import 'package:testingapp/Models/deliveries.dart';
+import 'package:testingapp/Pages/delivery_page.dart';
+import 'package:testingapp/Models/product_model.dart';
+import 'package:testingapp/Models/theme_provider.dart';
 
-import 'cart.dart';
-import 'delivery_page.dart';
+import '../Models/cart.dart';
 
-class BuyPage extends StatefulWidget {
-  const BuyPage({super.key});
+class BuyPageSingle extends StatefulWidget {
+  final Product product;
+  const BuyPageSingle({super.key, required this.product});
 
   @override
-  State<BuyPage> createState() => _BuyPageState();
+  State<BuyPageSingle> createState() => _BuyPageSingleState();
 }
 
-class _BuyPageState extends State<BuyPage> {
+class _BuyPageSingleState extends State<BuyPageSingle> {
+  bool paymentCalled = false;
+
   @override
   Widget build(BuildContext context) {
-    double price = 0;
-
     Cart CartProvider = Provider.of<Cart>(context);
-    for (int i = 0; i < CartProvider.getCartList.length; i++) {
-      price += CartProvider.getCartList[i].price;
-    }
+    AppColors AppColor = Provider.of<AppColors>(context);
+    for (int i = 0; i < CartProvider.getCartList.length; i++) {}
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'Purchase Page',
-          style: TextStyle(
-            color: Colors.white,
-          ),
         ),
         centerTitle: true,
       ),
@@ -41,7 +39,7 @@ class _BuyPageState extends State<BuyPage> {
               height: 40,
             ),
             Text(
-              'Buy these Items:',
+              'Buy this Item:',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -50,120 +48,68 @@ class _BuyPageState extends State<BuyPage> {
             SizedBox(
               height: 20,
             ),
-            Expanded(
-              child: ListView.builder(
-                  itemCount: CartProvider.getCartList.length,
-                  itemBuilder: (context, index) {
-                    return Column(
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Container(
+                    height: 155,
+                    decoration: BoxDecoration(
+                      color: AppColor.getColors[1].withOpacity(.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Container(
-                            height: 155,
-                            decoration: BoxDecoration(
-                              color: Colors.black12,
-                              borderRadius: BorderRadius.circular(12),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        ListTile(
+                          leading: Image(
+                            image: NetworkImage(
+                              widget.product.images[0],
                             ),
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                ListTile(
-                                  leading: Image(
-                                    image: NetworkImage(
-                                      CartProvider.getCartList[index].images[0],
-                                    ),
-                                  ),
-                                  title: Padding(
-                                    padding: const EdgeInsets.only(top: 8),
-                                    child: Text(
-                                      CartProvider.getCartList[index].title,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  subtitle: Text(CartProvider.getCartList[index]
-                                              .description.length >=
-                                          75
-                                      ? CartProvider
-                                          .getCartList[index].description
-                                          .substring(0, 75)
-                                      : CartProvider
-                                          .getCartList[index].description),
-                                  trailing: Padding(
-                                    padding: const EdgeInsets.only(top: 17),
-                                    child: Text(
-                                      '\$ ${CartProvider.getCartList[index].price.toString()}',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        CartProvider.removeFromCart(
-                                            CartProvider.getCartList[index]);
-                                        if (CartProvider.isEmpty()) {
-                                          Navigator.of(context).pop();
-                                        }
-                                      },
-                                      child: Text('Remove'),
-                                    ),
-                                    SizedBox(
-                                      width: 7,
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (BuildContext
-                                                        context) =>
-                                                    BuyPageSingle(
-                                                        product: CartProvider
-                                                                .getCartList[
-                                                            index])));
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            15, 0, 15, 0),
-                                        child: Text(
-                                          'Buy',
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 13,
-                                    ),
-                                  ],
-                                ),
-                              ],
+                          ),
+                          title: Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Text(
+                              widget.product.title,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          subtitle: Text(widget.product.description.length >= 75
+                              ? widget.product.description.substring(0, 75)
+                              : widget.product.description),
+                          trailing: Padding(
+                            padding: const EdgeInsets.only(top: 17),
+                            child: Text(
+                              '\$ ${widget.product.price.toString()}',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
                         SizedBox(
-                          height: 15,
+                          width: 5,
                         ),
                       ],
-                    );
-                  }),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+              ],
             ),
             SizedBox(
               height: 20,
             ),
             Text(
-              'Total \$ $price',
+              'Total \$ ${widget.product.price}',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -173,7 +119,7 @@ class _BuyPageState extends State<BuyPage> {
               height: 4,
             ),
             Text(
-              'for ${CartProvider.getCartList.length} items',
+              'for this Item',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -195,7 +141,12 @@ class _BuyPageState extends State<BuyPage> {
                             SizedBox(
                               height: 14,
                             ),
-                            Text('Loading Payment'),
+                            Text(
+                              'Loading Payment',
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -208,7 +159,7 @@ class _BuyPageState extends State<BuyPage> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return dialog(price);
+                      return dialog(widget.product.price);
                     },
                   );
                 }
@@ -218,7 +169,7 @@ class _BuyPageState extends State<BuyPage> {
               child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: Text(
-                  'Buy All',
+                  'Buy',
                   style: TextStyle(
                     fontSize: 19,
                   ),
@@ -235,8 +186,8 @@ class _BuyPageState extends State<BuyPage> {
   }
 
   Widget dialog(double price) {
+    Deliveries DeliveryProvider = Provider.of<Deliveries>(context);
     Cart CartProvider = Provider.of<Cart>(context);
-    Deliveries DeliveriesProvider = Provider.of<Deliveries>(context);
     return Dialog(
       backgroundColor: Colors.white,
       //insetAnimationDuration: Duration(seconds: 1),
@@ -256,12 +207,17 @@ class _BuyPageState extends State<BuyPage> {
                     ),
                     children: <TextSpan>[
                       TextSpan(
-                          text: 'Confirm Payment of\n\n',
-                          style: TextStyle(fontSize: 20)),
+                        text: 'Confirm Payment of\n\n',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                        ),
+                      ),
                       TextSpan(
                           text: '\$ $price',
                           style: TextStyle(
                             fontSize: 30,
+                            color: Colors.black,
                           )),
                     ]),
               ),
@@ -289,6 +245,7 @@ class _BuyPageState extends State<BuyPage> {
                                   ),
                                   Text(
                                     'Confirming payment\n\nPlease donot exit',
+                                    style: TextStyle(color: Colors.black),
                                   ),
                                 ],
                               ),
@@ -297,6 +254,9 @@ class _BuyPageState extends State<BuyPage> {
                         });
                     await Future.delayed(Duration(seconds: 2));
                     Navigator.pop(context);
+                    setState(() {
+                      paymentCalled = true;
+                    });
                     showDialog(
                         barrierDismissible: false,
                         context: context,
@@ -309,6 +269,7 @@ class _BuyPageState extends State<BuyPage> {
                                 children: [
                                   Text(
                                     'Payment Successful!\n\nItem will be delivered to your doorstep within 2 days',
+                                    style: TextStyle(color: Colors.black),
                                   ),
                                   SizedBox(
                                     height: 20,
@@ -317,15 +278,13 @@ class _BuyPageState extends State<BuyPage> {
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                         Navigator.of(context).pop();
-
+                                        DeliveryProvider.addToDelivery(
+                                            widget.product);
                                         Navigator.of(context).push(
                                             MaterialPageRoute(
                                                 builder:
                                                     (BuildContext context) =>
                                                         DeliveryPage()));
-                                        DeliveriesProvider.addListToDelivery(
-                                            CartProvider.getCartList);
-                                        CartProvider.clearCart = 0;
                                       },
                                       child: Text('Go to Delivery Page'))
                                 ],
@@ -333,7 +292,8 @@ class _BuyPageState extends State<BuyPage> {
                             ),
                           );
                         });
-                    //
+                    CartProvider.clearCart = 0;
+                    CartProvider.removeFromCart(widget.product);
                   }
 
                   paymentAnimation();

@@ -2,10 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:testingapp/buy_page.dart';
+import 'package:testingapp/Pages/buy_page.dart';
+import 'package:testingapp/Models/theme_provider.dart';
 
-import 'cart.dart';
-import 'cart_item_card.dart';
+import '../Models/cart.dart';
+import '../Cards/cart_item_card.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -21,9 +22,10 @@ class _CartPageState extends State<CartPage> {
 
   @override
   Widget build(BuildContext context) {
+    AppColors AppColor = Provider.of<AppColors>(context);
     Cart CartProvider = Provider.of<Cart>(context);
     return Scaffold(
-      backgroundColor: Colors.white,
+      //backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
         title: Text(
@@ -45,18 +47,15 @@ class _CartPageState extends State<CartPage> {
               ? Column(
                   children: [
                     SizedBox(
-                      height: 11,
+                      height: 15,
                     ),
                     ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                      ),
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (BuildContext context) => BuyPage()));
                       },
                       child: Padding(
-                        padding: const EdgeInsets.fromLTRB(100, 0, 100, 0),
+                        padding: const EdgeInsets.fromLTRB(107, 14, 107, 14),
                         child: Text(
                           'Buy all Items',
                           style: TextStyle(
@@ -77,7 +76,7 @@ class _CartPageState extends State<CartPage> {
                       text: TextSpan(
                         style: TextStyle(
                           fontSize: 20,
-                          color: Colors.black54,
+                          color: AppColor.getColors[1],
                         ),
                         children: <TextSpan>[
                           TextSpan(text: 'No items in 🛒\n'),

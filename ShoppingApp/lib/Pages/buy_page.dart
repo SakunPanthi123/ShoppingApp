@@ -2,35 +2,33 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:testingapp/cart_page.dart';
-import 'package:testingapp/deliveries.dart';
-import 'package:testingapp/delivery_page.dart';
-import 'package:testingapp/product_model.dart';
+import 'package:testingapp/Pages/buy_page_single.dart';
+import 'package:testingapp/Models/deliveries.dart';
+import 'package:testingapp/Models/theme_provider.dart';
 
-import 'cart.dart';
+import '../Models/cart.dart';
+import 'delivery_page.dart';
 
-class BuyPageSingle extends StatefulWidget {
-  final Product product;
-  const BuyPageSingle({super.key, required this.product});
+class BuyPage extends StatefulWidget {
+  const BuyPage({super.key});
 
   @override
-  State<BuyPageSingle> createState() => _BuyPageSingleState();
+  State<BuyPage> createState() => _BuyPageState();
 }
 
-class _BuyPageSingleState extends State<BuyPageSingle> {
-  bool paymentCalled = false;
-
+class _BuyPageState extends State<BuyPage> {
   @override
   Widget build(BuildContext context) {
+    double price = 0;
+    AppColors AppColor = Provider.of<AppColors>(context);
     Cart CartProvider = Provider.of<Cart>(context);
-    for (int i = 0; i < CartProvider.getCartList.length; i++) {}
+    for (int i = 0; i < CartProvider.getCartList.length; i++) {
+      price += CartProvider.getCartList[i].price;
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'Purchase Page',
-          style: TextStyle(
-            color: Colors.white,
-          ),
         ),
         centerTitle: true,
       ),
@@ -41,7 +39,7 @@ class _BuyPageSingleState extends State<BuyPageSingle> {
               height: 40,
             ),
             Text(
-              'Buy this Item:',
+              'Buy these Items:',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -50,68 +48,120 @@ class _BuyPageSingleState extends State<BuyPageSingle> {
             SizedBox(
               height: 20,
             ),
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Container(
-                    height: 155,
-                    decoration: BoxDecoration(
-                      color: Colors.black12,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
+            Expanded(
+              child: ListView.builder(
+                  itemCount: CartProvider.getCartList.length,
+                  itemBuilder: (context, index) {
+                    return Column(
                       children: [
-                        SizedBox(
-                          height: 30,
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Container(
+                            height: 155,
+                            decoration: BoxDecoration(
+                              color: AppColor.getColors[1].withOpacity(.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                ListTile(
+                                  leading: Image(
+                                    image: NetworkImage(
+                                      CartProvider.getCartList[index].images[0],
+                                    ),
+                                  ),
+                                  title: Padding(
+                                    padding: const EdgeInsets.only(top: 8),
+                                    child: Text(
+                                      CartProvider.getCartList[index].title,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  subtitle: Text(CartProvider.getCartList[index]
+                                              .description.length >=
+                                          75
+                                      ? CartProvider
+                                          .getCartList[index].description
+                                          .substring(0, 75)
+                                      : CartProvider
+                                          .getCartList[index].description),
+                                  trailing: Padding(
+                                    padding: const EdgeInsets.only(top: 17),
+                                    child: Text(
+                                      '\$ ${CartProvider.getCartList[index].price.toString()}',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        CartProvider.removeFromCart(
+                                            CartProvider.getCartList[index]);
+                                        if (CartProvider.isEmpty()) {
+                                          Navigator.of(context).pop();
+                                        }
+                                      },
+                                      child: Text('Remove'),
+                                    ),
+                                    SizedBox(
+                                      width: 7,
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (BuildContext
+                                                        context) =>
+                                                    BuyPageSingle(
+                                                        product: CartProvider
+                                                                .getCartList[
+                                                            index])));
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            15, 0, 15, 0),
+                                        child: Text(
+                                          'Buy',
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 13,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                        ListTile(
-                          leading: Image(
-                            image: NetworkImage(
-                              widget.product.images[0],
-                            ),
-                          ),
-                          title: Padding(
-                            padding: const EdgeInsets.only(top: 8),
-                            child: Text(
-                              widget.product.title,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          subtitle: Text(widget.product.description.length >= 75
-                              ? widget.product.description.substring(0, 75)
-                              : widget.product.description),
-                          trailing: Padding(
-                            padding: const EdgeInsets.only(top: 17),
-                            child: Text(
-                              '\$ ${widget.product.price.toString()}',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
                         SizedBox(
-                          width: 5,
+                          height: 15,
                         ),
                       ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-              ],
+                    );
+                  }),
             ),
             SizedBox(
               height: 20,
             ),
             Text(
-              'Total \$ ${widget.product.price}',
+              'Total \$ $price',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -121,7 +171,7 @@ class _BuyPageSingleState extends State<BuyPageSingle> {
               height: 4,
             ),
             Text(
-              'for this Item',
+              'for ${CartProvider.getCartList.length} items',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -143,7 +193,10 @@ class _BuyPageSingleState extends State<BuyPageSingle> {
                             SizedBox(
                               height: 14,
                             ),
-                            Text('Loading Payment'),
+                            Text(
+                              'Loading Payment',
+                              style: TextStyle(color: Colors.black),
+                            ),
                           ],
                         ),
                       ),
@@ -156,7 +209,7 @@ class _BuyPageSingleState extends State<BuyPageSingle> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return dialog(widget.product.price);
+                      return dialog(price);
                     },
                   );
                 }
@@ -166,7 +219,7 @@ class _BuyPageSingleState extends State<BuyPageSingle> {
               child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: Text(
-                  'Buy',
+                  'Buy All',
                   style: TextStyle(
                     fontSize: 19,
                   ),
@@ -183,8 +236,8 @@ class _BuyPageSingleState extends State<BuyPageSingle> {
   }
 
   Widget dialog(double price) {
-    Deliveries DeliveryProvider = Provider.of<Deliveries>(context);
     Cart CartProvider = Provider.of<Cart>(context);
+    Deliveries DeliveriesProvider = Provider.of<Deliveries>(context);
     return Dialog(
       backgroundColor: Colors.white,
       //insetAnimationDuration: Duration(seconds: 1),
@@ -237,6 +290,7 @@ class _BuyPageSingleState extends State<BuyPageSingle> {
                                   ),
                                   Text(
                                     'Confirming payment\n\nPlease donot exit',
+                                    style: TextStyle(color: Colors.black),
                                   ),
                                 ],
                               ),
@@ -245,9 +299,6 @@ class _BuyPageSingleState extends State<BuyPageSingle> {
                         });
                     await Future.delayed(Duration(seconds: 2));
                     Navigator.pop(context);
-                    setState(() {
-                      paymentCalled = true;
-                    });
                     showDialog(
                         barrierDismissible: false,
                         context: context,
@@ -260,6 +311,7 @@ class _BuyPageSingleState extends State<BuyPageSingle> {
                                 children: [
                                   Text(
                                     'Payment Successful!\n\nItem will be delivered to your doorstep within 2 days',
+                                    style: TextStyle(color: Colors.black),
                                   ),
                                   SizedBox(
                                     height: 20,
@@ -268,13 +320,15 @@ class _BuyPageSingleState extends State<BuyPageSingle> {
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                         Navigator.of(context).pop();
-                                        DeliveryProvider.addToDelivery(
-                                            widget.product);
+
                                         Navigator.of(context).push(
                                             MaterialPageRoute(
                                                 builder:
                                                     (BuildContext context) =>
                                                         DeliveryPage()));
+                                        DeliveriesProvider.addListToDelivery(
+                                            CartProvider.getCartList);
+                                        CartProvider.clearCart = 0;
                                       },
                                       child: Text('Go to Delivery Page'))
                                 ],
@@ -282,8 +336,7 @@ class _BuyPageSingleState extends State<BuyPageSingle> {
                             ),
                           );
                         });
-                    CartProvider.clearCart = 0;
-                    CartProvider.removeFromCart(widget.product);
+                    //
                   }
 
                   paymentAnimation();
