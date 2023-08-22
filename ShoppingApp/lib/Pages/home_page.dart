@@ -141,7 +141,6 @@ class _HomePageState extends State<HomePage> {
                 }
               }
 
-
               log(categoryNames.toString());
 
               return Expanded(
