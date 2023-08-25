@@ -1,5 +1,9 @@
-**Flutter Shopping app made using REST APIs and Provider package for state management**
-<break>
-![README (2)_00001](https://github.com/SakunPanthi123/ShoppingApp/assets/141636699/91912b1b-5ea9-4410-83b3-7af8b6531bb7)
+## Screenshots of the UI
 
-![README (2)_00002](https://github.com/SakunPanthi123/ShoppingApp/assets/141636699/b49c3657-20e2-4ebb-921c-d6d4de2e1e57)
+| Screenshot 1 | Screenshot 2 | Screenshot 3 |
+|:---:|:---:|:---:|
+| ![Image 1](https://github.com/SakunPanthi123/ShoppingApp/assets/141636699/1b89351a-4bdc-4af3-9566-b70ec38576de) | ![Image 2](https://github.com/SakunPanthi123/ShoppingApp/assets/141636699/510a833f-f750-4179-915f-f316bab4b478) | ![Image 3](https://github.com/SakunPanthi123/ShoppingApp/assets/141636699/e8e192d2-f008-4e51-875b-406404c4b25a) |
+| Screenshot 4 | Screenshot 5 | Screenshot 6 |
+| ![Image 4](https://github.com/SakunPanthi123/ShoppingApp/assets/141636699/96cd2375-f25c-4540-9f13-7fee7807f70d) | ![Image 5](https://github.com/SakunPanthi123/ShoppingApp/assets/141636699/35eb15c6-6562-41c9-98f7-eaf27c753565) | ![Image 6](https://github.com/SakunPanthi123/ShoppingApp/assets/141636699/dc3b816b-7b76-494b-9405-7cad155699ae) |
+| Screenshot 7 |
+| ![Image 7](https://github.com/SakunPanthi123/ShoppingApp/assets/141636699/a2a1d519-5c32-4987-9263-9864709f0d74) |
