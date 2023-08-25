@@ -15,6 +15,7 @@ import 'Pages/delivery_page.dart';
 
 void main() {
   Future<List<Product>?> productsList = APIs.getProducts();
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(
